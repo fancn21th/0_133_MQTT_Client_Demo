@@ -1,32 +1,34 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import mqtt from "mqtt";
 
 export default () => {
+  const [state, setState] = useState("not ready");
+
   useEffect(() => {
     var clientId = "mqttjs_" + Math.random().toString(16).substr(2, 8);
 
     var host = "ws://localhost:3000";
 
-    var options = {
-      keepalive: 10,
-      clientId: clientId,
-      protocolId: "MQTT",
-      protocolVersion: 4,
-      clean: true,
-      reconnectPeriod: 1000,
-      connectTimeout: 30 * 1000,
-      will: {
-        topic: "WillMsg",
-        payload: "Connection Closed abnormally..!",
-        qos: 0,
-        retain: false,
-      },
-      username: "demo",
-      password: "demo",
-      rejectUnauthorized: false,
-    };
+    // var options = {
+    //   keepalive: 10,
+    //   clientId: clientId,
+    //   protocolId: "MQTT",
+    //   protocolVersion: 4,
+    //   clean: true,
+    //   reconnectPeriod: 1000,
+    //   connectTimeout: 30 * 1000,
+    //   will: {
+    //     topic: "WillMsg",
+    //     payload: "Connection Closed abnormally..!",
+    //     qos: 0,
+    //     retain: false,
+    //   },
+    //   username: "demo",
+    //   password: "demo",
+    //   rejectUnauthorized: false,
+    // };
 
-    var client = mqtt.connect(host, options);
+    var client = mqtt.connect(host);
 
     client.on("error", function (err) {
       console.log(err);
@@ -35,6 +37,7 @@ export default () => {
 
     client.on("connect", function () {
       console.log("client connected:" + clientId);
+      setState("ready");
     });
 
     client.subscribe("topic", { qos: 0 });
@@ -55,5 +58,6 @@ export default () => {
     });
   }, []);
 
+  if (state !== "ready") return <div>Connecting...</div>;
   return <div>Hello MQTT!</div>;
 };
