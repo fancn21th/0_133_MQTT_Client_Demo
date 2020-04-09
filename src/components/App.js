@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import mqtt from "mqtt";
 
+const topic = "/foo";
+
 export default () => {
   const [state, setState] = useState("not ready");
 
@@ -36,16 +38,16 @@ export default () => {
     });
 
     client.on("connect", function () {
-      console.log("client connected:" + clientId);
+      console.log("客户端连接到服务器成功! id:" + clientId);
       setState("ready");
     });
 
-    client.subscribe("topic", { qos: 0 });
+    client.subscribe(topic, { qos: 0 });
 
-    client.publish("topic", "wss secure connection demo...!", {
-      qos: 0,
-      retain: false,
-    });
+    // client.publish("topic", "wss secure connection demo...!", {
+    //   qos: 0,
+    //   retain: false,
+    // });
 
     client.on("message", function (topic, message, packet) {
       console.log(
@@ -55,6 +57,7 @@ export default () => {
 
     client.on("close", function () {
       console.log(clientId + " disconnected");
+      setState("not ready");
     });
   }, []);
 
