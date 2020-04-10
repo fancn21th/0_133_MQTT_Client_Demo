@@ -28,9 +28,7 @@ export default () => {
       });
 
       client.on("message", function(topic, message, packet) {
-        console.log(
-          "Received Message:= " + message.toString() + "\nOn topic:= " + topic
-        );
+        console.log([topic, message].join("===>"));
       });
 
       client.on("close", function() {
@@ -79,10 +77,10 @@ export default () => {
       });
   };
 
-  if (state !== "ready") return <div>Connecting...</div>;
+  if (state !== "ready") return <h1>Connecting...</h1>;
   return (
     <div>
-      Hello MQTT!
+      <h1>Hello MQTT!</h1>
       <button onClick={onSend}>Send another message</button>
     </div>
   );
