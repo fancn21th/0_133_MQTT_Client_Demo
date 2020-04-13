@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from "react";
 import mqtt from "mqtt";
 
-const topic = "/foo";
-
 export default () => {
   const [state, setState] = useState("not ready");
   const [client, setClient] = useState(null);
@@ -10,12 +8,12 @@ export default () => {
 
   useEffect(() => {
     if (client) {
-      client.on("error", function(err) {
+      client.on("error", function (err) {
         console.log(err);
         client.end();
       });
 
-      client.on("connect", function() {
+      client.on("connect", function () {
         console.log("client connected:" + clientId);
         setState("ready");
       });
@@ -24,26 +22,21 @@ export default () => {
 
       client.publish("topic", "wss secure connection demo...!", {
         qos: 0,
-        retain: false
+        retain: false,
       });
 
-      client.on("message", function(topic, message, packet) {
+      client.on("message", function (topic, message, packet) {
         console.log([topic, message].join("===>"));
       });
 
-      client.on("close", function() {
+      client.on("close", function () {
         console.log(clientId + " disconnected");
       });
     }
   }, [client]);
 
   useEffect(() => {
-    setClientId(
-      "mqttjs_" +
-        Math.random()
-          .toString(16)
-          .substr(2, 8)
-    );
+    setClientId("mqttjs_" + Math.random().toString(16).substr(2, 8));
 
     var host = "ws://localhost:3000";
 
@@ -59,11 +52,11 @@ export default () => {
         topic: "WillMsg",
         payload: "Connection Closed abnormally..!",
         qos: 0,
-        retain: false
+        retain: false,
       },
       username: "demo",
       password: "demo",
-      rejectUnauthorized: false
+      rejectUnauthorized: false,
     };
 
     setClient(mqtt.connect(host, options));
@@ -73,7 +66,7 @@ export default () => {
     if (client)
       client.publish("topic", "blah blah.......", {
         qos: 0,
-        retain: false
+        retain: false,
       });
   };
 
